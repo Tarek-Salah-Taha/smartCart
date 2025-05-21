@@ -28,8 +28,6 @@ export async function fetchUserCart(
     .eq("user_id", userId)
     .maybeSingle();
 
-  console.log(data);
-
   if (error) {
     throw new Error(error.message || "Failed to fetch cart");
   }
