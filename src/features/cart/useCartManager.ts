@@ -161,6 +161,7 @@ export function useCartManager() {
       addItemMutation.mutate(item);
     } else {
       dispatch(addItemRedux(item));
+      toast.success("Added to cart!");
     }
   }
 
@@ -169,6 +170,7 @@ export function useCartManager() {
       removeItemMutation.mutate(itemId);
     } else {
       dispatch(removeItemRedux(itemId));
+      toast.success("Removed from cart!");
     }
   }
 
@@ -183,9 +185,11 @@ export function useCartManager() {
 
       if (diff > 0) {
         for (let i = 0; i < diff; i++) dispatch(increaseQuantityRedux(itemId));
+        toast.success("Updated quantity!");
       } else if (diff < 0) {
         for (let i = 0; i < Math.abs(diff); i++)
           dispatch(decreaseQuantityRedux(itemId));
+        toast.success("Updated quantity!");
       }
     }
   }
@@ -195,6 +199,7 @@ export function useCartManager() {
       clearCartMutation.mutate();
     } else {
       dispatch(clearCartRedux());
+      toast.success("Cleared cart!");
     }
   }
 

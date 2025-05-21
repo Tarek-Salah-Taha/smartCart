@@ -123,6 +123,7 @@ export function useFavoritesManager() {
       addFavoriteMutation.mutate(item);
     } else {
       dispatch(addFavoriteRedux(item));
+      toast.success("Added to favorites!");
     }
   }
 
@@ -131,6 +132,7 @@ export function useFavoritesManager() {
       removeFavoriteMutation.mutate(itemId);
     } else {
       dispatch(removeFavoriteRedux(itemId));
+      toast.success("Removed from favorites!");
     }
   }
 
@@ -139,6 +141,7 @@ export function useFavoritesManager() {
       clearFavoriteMutation.mutate();
     } else {
       dispatch(clearFavoritesRedux());
+      toast.success("Cleared favorites!");
     }
   }
 
