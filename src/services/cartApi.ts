@@ -26,14 +26,15 @@ export async function fetchUserCart(
     .from("cart")
     .select("cart_items")
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
 
-  if (error && error.code !== "PGRST116") {
-    // Only throw if it's a real error (e.g., connection issue), not "row not found"
+  console.log(data);
+
+  if (error) {
     throw new Error(error.message || "Failed to fetch cart");
   }
 
-  return data?.cart_items ?? null; // return null if no row found
+  return data?.cart_items ?? []; // return null if no row found
 }
 
 // In the addToCart function (or anywhere appropriate)
