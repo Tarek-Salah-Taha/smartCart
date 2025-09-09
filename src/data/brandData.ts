@@ -1,4 +1,5 @@
 import acer from "../public/assets/brands/acer.png";
+
 import instantPot from "../public/assets/brands/instantPot.png";
 import anchor from "../public/assets/brands/anchor.png";
 import amaze1 from "../public/assets/brands/amaze1.png";
