@@ -214,7 +214,7 @@ function ProductCard({ product }: ProductCardProps) {
                   boxShadow: "0 0 8px rgba(216,125,74,0.6)",
                 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex-1 text-base sm:text-base font-semibold text-white bg-[#d87d4a] hover:bg-[#c76b3a] px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg shadow transition duration-300 h-12 sm:h-auto sm:order-1 order-2 sm:text-base text-md"
+                className="flex-1 text-base font-semibold text-white bg-[#d87d4a] hover:bg-[#c76b3a] px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg shadow transition duration-300 h-12 sm:h-auto sm:order-1 order-2 sm:text-base text-md"
               >
                 Add to Cart
               </motion.button>

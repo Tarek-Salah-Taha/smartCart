@@ -9,39 +9,37 @@ function CategoryInfoCard({
   image,
 }: CategoryInfoCardProps) {
   return (
-    <div className="bg-white shadow-lg rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-xl max-w-sm mx-auto border border-gray-100 flex flex-col">
+    <div className="bg-white shadow-md rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg max-w-sm mx-auto border border-gray-100 flex flex-col h-full">
       <div className="aspect-w-16 aspect-h-9">
         <img
           src={image}
           alt={title}
           loading="lazy"
-          className="w-full h-full object-cover"
+          className="w-full h-48 object-cover"
         />
       </div>
 
-      {/* Make the content area a flex column */}
-      <div className="p-5 flex flex-col flex-grow">
+      <div className="p-5 flex flex-col flex-grow space-y-4">
         <div className="space-y-3 flex-grow">
-          <h2 className="text-2xl font-bold text-gray-800 capitalize">
+          <h2 className="text-xl font-semibold text-gray-900 capitalize">
             {title}
           </h2>
-          <p className="text-base text-gray-600 leading-relaxed">
+          <p className="text-gray-600 leading-relaxed text-base line-clamp-3">
             {description}
           </p>
         </div>
 
-        {/* Stick this to the bottom */}
-        <div className="pt-4">
+        <div className="pt-2">
           <Link
             to={link}
-            className="group inline-flex items-center gap-1 text-sm text-gray-800 hover:text-[#d87d4a] transition-all font-medium"
+            className="group inline-flex items-center gap-2 text-gray-700 hover:text-[#d87d4a] transition-all duration-300 font-medium"
           >
             <span className="group-hover:underline group-hover:font-semibold text-base">
-              Explore Related Products
+              Explore Products
             </span>
             <BsArrowRightSquare
-              size={30}
-              className="transition-transform group-hover:translate-x-1"
+              size={24}
+              className="transition-transform duration-300 group-hover:translate-x-1"
             />
           </Link>
         </div>

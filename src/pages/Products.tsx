@@ -38,55 +38,89 @@ function Products() {
   };
 
   return (
-    <div className="container mx-auto p-4 mt-4 mb-10 px-25">
-      <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 pl-2 md:pl-10 text-gray-800 leading-tight ">
-        Shop Premium Products with Great Deals
-      </h1>
-      <p className="text-gray-600 mb-4 pl-2 sm:pl-4 md:pl-10 text-xl sm:text-2xl md:text-2xl lg:text-2xl">
-        Our curated collection features the finest products from top brands.
-        Whether you’re upgrading your tech or discovering new favorites, we
-        offer the best deals with free shipping options. Shop today and take
-        advantage of exclusive discounts and limited-time offers!
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 justify-items-center p-1 sm:p-4 max-w-full">
+    <div className="container mx-auto px-4 py-8">
+      {/* Header Section */}
+      <div className="max-w-4xl mx-auto mb-12 text-center px-4">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-6 leading-tight">
+          Shop Premium Products
+        </h1>
+        <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+          Our curated collection features the finest products from top brands.
+          Whether you're upgrading your tech or discovering new favorites, we
+          offer the best deals with free shipping options.
+        </p>
+      </div>
+
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center mb-12">
         <AnimatePresence>
           {currentProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </AnimatePresence>
       </div>
+
       {/* Pagination Controls */}
-      <div className="flex flex-wrap justify-center mt-8 gap-2 sm:gap-3 max-w-full px-2">
-        <button
-          onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 border rounded hover:bg-gray-200 disabled:opacity-50"
-        >
-          Prev
-        </button>
+      {totalPages > 1 && (
+        <div className="flex flex-col items-center mt-12">
+          <div className="text-sm text-gray-500 mb-4">
+            Page {currentPage} of {totalPages}
+          </div>
 
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => goToPage(i + 1)}
-            className={`px-3 py-1 border rounded ${
-              currentPage === i + 1
-                ? "bg-[#d87d4a] text-white"
-                : "hover:bg-[#C76b3a] text-black"
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
+          <div className="flex flex-wrap justify-center gap-2">
+            <button
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium"
+            >
+              Previous
+            </button>
 
-        <button
-          onClick={() => goToPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 border rounded hover:bg-gray-200 disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
+            {Array.from({ length: totalPages }, (_, i) => {
+              const pageNumber = i + 1;
+              // Show limited page numbers with ellipsis for many pages
+              if (
+                totalPages <= 7 ||
+                pageNumber === 1 ||
+                pageNumber === totalPages ||
+                (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+              ) {
+                return (
+                  <button
+                    key={pageNumber}
+                    onClick={() => goToPage(pageNumber)}
+                    className={`min-w-[44px] px-3 py-2 rounded-lg border transition-colors duration-200 font-medium ${
+                      currentPage === pageNumber
+                        ? "bg-[#d87d4a] text-white border-[#d87d4a]"
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              } else if (
+                pageNumber === currentPage - 2 ||
+                pageNumber === currentPage + 2
+              ) {
+                return (
+                  <span key={pageNumber} className="px-2 py-2">
+                    ...
+                  </span>
+                );
+              }
+              return null;
+            })}
+
+            <button
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

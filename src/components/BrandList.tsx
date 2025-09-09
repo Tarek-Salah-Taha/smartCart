@@ -19,7 +19,7 @@ function BrandList() {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center p-4 sm:p-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
         <AnimatePresence>
           {currentBrand.map((category) => (
             <BrandInfoCard
@@ -34,33 +34,35 @@ function BrandList() {
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex justify-center mt-8 gap-2">
+      <div className="flex justify-center mt-10 md:mt-12 gap-2">
         <button
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1}
-          className="px-4 py-2 border rounded hover:bg-gray-200 disabled:opacity-50"
+          className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium"
         >
-          Prev
+          Previous
         </button>
 
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => goToPage(i + 1)}
-            className={`px-3 py-1 border rounded ${
-              currentPage === i + 1
-                ? "bg-[#d87d4a] text-white"
-                : "hover:bg-[#C76b3a] text-black"
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
+        <div className="flex gap-2">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => goToPage(i + 1)}
+              className={`px-3 py-2 border rounded-md transition-colors duration-200 font-medium min-w-[44px] ${
+                currentPage === i + 1
+                  ? "bg-[#d87d4a] border-[#d87d4a] text-white"
+                  : "border-gray-300 text-gray-700 hover:bg-[#f9f0eb]"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
 
         <button
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 border rounded hover:bg-gray-200 disabled:opacity-50"
+          className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium"
         >
           Next
         </button>

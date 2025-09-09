@@ -33,23 +33,34 @@ function BrandProducts() {
   if (isError) return <Errors message="Failed to load products." />;
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-4 flex items-center gap-2">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-6 md:mb-8">
         <Link
           to="/brands"
-          className="flex items-center gap-1 text-[#d87d4a] hover:text-black text-sm font-medium hover:underline"
+          className="inline-flex items-center gap-2 text-[#d87d4a] hover:text-[#c76b3a] transition-colors duration-300 font-medium group"
         >
-          <FaArrowAltCircleLeft className="text-lg" />
-          <span className="text-lg">Back to All Brands</span>
+          <FaArrowAltCircleLeft className="text-lg group-hover:-translate-x-1 transition-transform duration-300" />
+          <span className="text-base md:text-lg">Back to All Brands</span>
         </Link>
       </div>
 
-      <h1 className="text-3xl font-bold capitalize">{brand} products</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
-        {products?.map((product) => (
-          <ProductCard product={product} key={product.id} />
-        ))}
-      </div>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 capitalize mb-6 md:mb-8">
+        {brand} Products
+      </h1>
+
+      {products?.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-xl text-gray-500">
+            No products found for {brand}.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {products?.map((product) => (
+            <ProductCard product={product} key={product.id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

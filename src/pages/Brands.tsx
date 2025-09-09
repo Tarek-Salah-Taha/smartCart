@@ -2,15 +2,17 @@ import BrandList from "../components/BrandList";
 
 function Brands() {
   return (
-    <div className="container mx-auto p-4 mt-4 mb-10 px-25">
-      <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 pl-2 md:pl-10 text-gray-800 leading-tight ">
-        Top Tech & Audio Brands to Know
-      </h1>
-      <p className="text-gray-600 mb-4 pl-2 sm:pl-4 md:pl-10 text-xl sm:text-2xl md:text-2xl lg:text-2xl">
-        Discover top tech and audio brands known for their innovative products,
-        from smartphones to gaming gear and high-quality audio equipment,
-        shaping the future of tech and entertainment.
-      </p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="text-center mb-8 md:mb-12">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6">
+          Top Tech & Audio Brands to Know
+        </h1>
+        <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          Discover top tech and audio brands known for their innovative
+          products, from smartphones to gaming gear and high-quality audio
+          equipment, shaping the future of tech and entertainment.
+        </p>
+      </div>
       <BrandList />
     </div>
   );

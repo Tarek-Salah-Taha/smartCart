@@ -40,28 +40,33 @@ function Profile() {
   return (
     <div className="relative">
       {isAuthenticated && user ? (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3 md:space-x-4">
           {user.avatarUrl ? (
             <img
               src={user.avatarUrl}
               alt="Avatar"
-              className="w-10 rounded-full object-cover aspect-square"
+              className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-transparent hover:border-[#d87d4a] transition-colors duration-200"
             />
           ) : (
-            <p className="text-lg font-bold">{user.firstName}</p>
+            <p className="text-base md:text-lg font-semibold text-gray-700 hover:text-[#d87d4a] transition-colors duration-200">
+              {user.firstName}
+            </p>
           )}
           <IoLogOutOutline
-            size={35}
-            className="cursor-pointer hover:text-red-500"
+            size={28}
+            className="md:size-[32px] cursor-pointer text-gray-600 hover:text-red-500 transition-colors duration-200 transform hover:scale-110"
             onClick={handleLogout}
           />
         </div>
       ) : (
         <div
-          className="relative cursor-pointer"
+          className="relative cursor-pointer transition-transform duration-200 hover:scale-105"
           onClick={() => navigate("/signUp")}
         >
-          <IoPersonCircleOutline size={30} className="hover:text-[#d87d4a]" />
+          <IoPersonCircleOutline
+            size={28}
+            className="md:size-[32px] text-gray-600 hover:text-[#d87d4a] transition-colors duration-200"
+          />
         </div>
       )}
     </div>

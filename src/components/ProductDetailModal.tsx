@@ -185,10 +185,9 @@ function ProductDetailModal({ product, onClose }: ProductDetailModalProps) {
               </p>
 
               {/* Action Buttons */}
-
               <div className="flex flex-col gap-4 mt-6 w-full max-w-xs">
                 {/* Add to Cart and Favorite - side by side */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                   {quantity === 0 ? (
                     <motion.button
                       onClick={handleAddToCart}

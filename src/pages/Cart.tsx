@@ -59,35 +59,41 @@ function Cart() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">Your Cart</h1>
+    <div className="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <h1 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-4">
+        Your Cart
+      </h1>
 
       {isLoading ? (
-        <Spinner />
+        <div className="flex justify-center py-12">
+          <Spinner />
+        </div>
       ) : !items || items?.length === 0 ? (
-        <p className="text-center text-xl text-gray-700 py-6 rounded-xl">
-          Your cart is currently empty. Start shopping and add items to your
-          cart!
-        </p>
+        <div className="bg-gray-50 rounded-xl p-8 text-center">
+          <p className="text-xl text-gray-700 mb-2">Your cart is empty</p>
+          <p className="text-gray-500">
+            Start shopping and add items to your cart!
+          </p>
+        </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-6">
           {items?.map((item) => (
             <div
               key={item.itemId}
-              className="flex flex-col sm:flex-row items-center gap-6 border-b pb-6"
+              className="flex flex-col sm:flex-row items-center gap-6 p-5 bg-white rounded-lg shadow-sm border border-gray-100"
             >
               <img
                 src={item.image}
                 alt={item.title}
-                className="w-24 h-24 object-contain"
+                className="w-20 h-20 sm:w-24 sm:h-24 object-contain bg-white p-2 rounded-md border border-gray-200"
                 loading="lazy"
               />
 
               <div className="flex-1 text-center sm:text-left">
-                <h2 className="text-lg font-semibold text-gray-800">
+                <h2 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2">
                   {item.title}
                 </h2>
-                <p className="text-sm text-gray-500">
+                <p className="text-base font-medium text-gray-700">
                   {formatPrice(item.price)}
                 </p>
               </div>
@@ -98,22 +104,24 @@ function Cart() {
                     item.quantity > 1 && handleDecreaseQuantity(item)
                   }
                   disabled={item.quantity <= 1}
-                  className={`px-2 py-1 text-lg rounded ${
+                  className={`w-8 h-8 flex items-center justify-center rounded-full ${
                     item.quantity <= 1
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-200 hover:bg-gray-300"
-                  }`}
+                      : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  } transition-colors duration-200`}
+                  aria-label="Decrease quantity"
                 >
                   −
                 </button>
 
-                <span className="mx-2 text-gray-700 font-medium">
+                <span className="w-10 text-center text-gray-700 font-medium text-lg">
                   {item.quantity}
                 </span>
 
                 <button
                   onClick={() => handleIncreaseQuantity(item)}
-                  className="px-2 py-1 text-lg bg-gray-200 rounded hover:bg-gray-300"
+                  className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 text-gray-700 transition-colors duration-200"
+                  aria-label="Increase quantity"
                 >
                   +
                 </button>
@@ -121,23 +129,27 @@ function Cart() {
 
               <button
                 onClick={() => handleRemoveItem(item)}
-                className="text-sm text-red-600 hover:underline"
+                className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
+                aria-label="Remove item"
               >
-                <AiOutlineDelete size={30} />
+                <AiOutlineDelete size={24} />
               </button>
             </div>
           ))}
 
-          <div className="flex justify-between items-center mt-8">
+          <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 mt-8 p-6 bg-white rounded-lg shadow-sm border border-gray-100">
             <button
               onClick={handleClearCart}
-              className="bg-red-500 hover:bg-red-600 text-white px-5 py-4 rounded-lg text-sm font-semibold transition duration-300"
+              className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-300 shadow-sm hover:shadow-md"
             >
               Remove All Items
             </button>
 
-            <div className="text-xl font-bold text-gray-800">
-              Total: {formatPrice(+(totalPrice ?? 0).toFixed(2))}
+            <div className="w-full sm:w-auto text-center sm:text-right">
+              <div className="text-lg text-gray-600 mb-1">Total</div>
+              <div className="text-2xl font-bold text-gray-800">
+                {formatPrice(+(totalPrice ?? 0).toFixed(2))}
+              </div>
             </div>
           </div>
         </div>

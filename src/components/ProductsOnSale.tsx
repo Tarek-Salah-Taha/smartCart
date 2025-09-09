@@ -24,11 +24,11 @@ function ProductsOnSale() {
   if (error) return <Errors message="Failed to fetch products" />;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 lg:py-16">
+      <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-8 md:mb-10 lg:mb-12 text-center">
         Best Offers of the Moment!
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {productsOnSale.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

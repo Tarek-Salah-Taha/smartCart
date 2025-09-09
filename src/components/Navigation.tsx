@@ -9,23 +9,24 @@ const navItems = [
 
 function Navigation() {
   return (
-    <nav className="w-full text-base sm:text-xl md:text-2xl lg:text-3xl">
-      <ul className="flex flex-col pl-10 gap-10 items-start w-full sm:flex-row sm:gap-10 sm:items-center">
+    <nav className="w-full">
+      <ul className="flex flex-col sm:flex-row sm:items-center sm:justify-center sm:gap-8 md:gap-10 lg:gap-12">
         {navItems.map(({ name, to }) => (
-          <li key={to}>
+          <li key={to} className="w-full sm:w-auto">
             <NavLink
               to={to}
               className={({ isActive }) =>
-                `relative transition-all transform hover:scale-105
-                 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-[#d87d4a] after:transition-all after:duration-300
+                `block py-3 sm:py-2 px-6 sm:px-0 text-base sm:text-lg md:text-xl lg:text-2xl font-medium transition-all duration-300
+                 relative group hover:bg-gray-50 sm:hover:bg-transparent rounded-lg sm:rounded-none
+                 after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:bg-[#d87d4a] after:transition-all after:duration-300
                  ${
                    isActive
-                     ? "text-[#d87d4a] after:w-full"
-                     : "text-gray-800 hover:text-[#d87d4a] after:w-0 hover:after:w-full"
+                     ? "text-[#d87d4a] bg-gray-50 sm:bg-transparent after:w-full font-semibold"
+                     : "text-gray-800 group-hover:text-[#d87d4a] after:w-0 group-hover:after:w-full"
                  }`
               }
             >
-              {name.toUpperCase()}
+              <span className="relative z-10">{name.toUpperCase()}</span>
             </NavLink>
           </li>
         ))}
