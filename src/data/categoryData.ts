@@ -1,18 +1,11 @@
 import { FaLaptop, FaMobileAlt } from "react-icons/fa";
 import { IoGameController, IoHeadsetSharp } from "react-icons/io5";
 import { FaTv, FaHouseDamage } from "react-icons/fa";
-
-import electricAppliances from "../assets/categories/electricAppliances.png";
-import gaming from "../assets/categories/gaming.png";
-import headphones from "../assets/categories/headphones.png";
-import laptop from "../assets/categories/laptop.png";
-import smartphones from "../assets/categories/smartphones.png";
-import smartTvs from "../assets/categories/smartTvs.png";
 import { Category } from "../types/types";
 
 const categoryData: Category[] = [
   {
-    image: laptop,
+    image: "/categories/laptop.png",
     icon: FaLaptop,
     title: "laptop",
     description:
@@ -20,7 +13,7 @@ const categoryData: Category[] = [
     link: "laptop",
   },
   {
-    image: gaming,
+    image: "/categories/gaming.png",
     icon: IoGameController,
     title: "gaming",
     description:
@@ -28,7 +21,7 @@ const categoryData: Category[] = [
     link: "gaming",
   },
   {
-    image: headphones,
+    image: "/categories/headphones.png",
     icon: IoHeadsetSharp,
     title: "audio",
     description:
@@ -37,7 +30,7 @@ const categoryData: Category[] = [
   },
 
   {
-    image: smartTvs,
+    image: "/categories/smartTvs.png",
     icon: FaTv,
     title: "tv",
     description:
@@ -45,7 +38,7 @@ const categoryData: Category[] = [
     link: "tv",
   },
   {
-    image: electricAppliances,
+    image: "/categories/electricAppliances.png",
     icon: FaHouseDamage,
     title: "appliances",
     description:
@@ -53,7 +46,7 @@ const categoryData: Category[] = [
     link: "appliances",
   },
   {
-    image: smartphones,
+    image: "/categories/smartphones.png",
     icon: FaMobileAlt,
     title: "mobile",
     description:

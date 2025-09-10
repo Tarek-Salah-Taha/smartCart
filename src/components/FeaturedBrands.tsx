@@ -12,7 +12,7 @@ function FeaturedBrands() {
           Your Favorite Brands, All in One Place
         </h1>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {featuredBrands.slice(0, 6).map(
             (
               brand // Show only 6 brands max

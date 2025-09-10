@@ -63,10 +63,6 @@ function Products() {
       {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex flex-col items-center mt-8 sm:mt-12">
-          <div className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
-            Page {currentPage} of {totalPages}
-          </div>
-
           <div className="flex flex-wrap justify-center gap-1 sm:gap-2 px-4">
             <button
               onClick={() => goToPage(currentPage - 1)}

@@ -1,20 +1,21 @@
 import { Product } from "../types/types";
+import supabase from "./supabase";
 
 export async function fetchProducts(): Promise<Product[]> {
   try {
-    const res = await fetch("https://fakestoreapi.in/api/products?limit=150");
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("id");
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch products");
+    if (error) {
+      throw new Error(`Failed to fetch products: ${error.message}`);
     }
 
-    const data = await res.json();
-
-    return data.products;
+    return data || [];
   } catch (err) {
-    {
-      throw err;
-    }
+    console.error("Error fetching products:", err);
+    throw err;
   }
 }
 
@@ -22,21 +23,20 @@ export async function fetchProductsByCategory(
   category: string
 ): Promise<Product[]> {
   try {
-    const res = await fetch(
-      `https://fakestoreapi.in/api/products/category?type=${category}`
-    );
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("category", category.toLowerCase())
+      .order("id");
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch products");
+    if (error) {
+      throw new Error(`Failed to fetch products by category: ${error.message}`);
     }
 
-    const data = await res.json();
-
-    return data.products;
+    return data || [];
   } catch (err) {
-    {
-      throw err;
-    }
+    console.error("Error fetching products by category:", err);
+    throw err;
   }
 }
 
@@ -44,20 +44,19 @@ export const fetchProductsByBrand = async (
   brand: string
 ): Promise<Product[]> => {
   try {
-    const res = await fetch("https://fakestoreapi.in/api/products?limit=150");
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .ilike("brand", brand) // Case-insensitive search
+      .order("id");
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch products");
+    if (error) {
+      throw new Error(`Failed to fetch products by brand: ${error.message}`);
     }
 
-    const data = await res.json();
-
-    return data.products.filter(
-      (product: Product) => product.brand.toLowerCase() === brand.toLowerCase()
-    );
+    return data || [];
   } catch (err) {
-    {
-      throw err;
-    }
+    console.error("Error fetching products by brand:", err);
+    throw err;
   }
 };
