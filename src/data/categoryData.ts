@@ -2,12 +2,12 @@ import { FaLaptop, FaMobileAlt } from "react-icons/fa";
 import { IoGameController, IoHeadsetSharp } from "react-icons/io5";
 import { FaTv, FaHouseDamage } from "react-icons/fa";
 
-import electricAppliances from "../public/assets/categories/electricAppliances.png";
-import gaming from "../public/assets/categories/gaming.png";
-import headphones from "../public/assets/categories/headphones.png";
-import laptop from "../public/assets/categories/laptop.png";
-import smartphones from "../public/assets/categories/smartphones.png";
-import smartTvs from "../public/assets/categories/smartTvs.png";
+import electricAppliances from "../assets/categories/electricAppliances.png";
+import gaming from "../assets/categories/gaming.png";
+import headphones from "../assets/categories/headphones.png";
+import laptop from "../assets/categories/laptop.png";
+import smartphones from "../assets/categories/smartphones.png";
+import smartTvs from "../assets/categories/smartTvs.png";
 import { Category } from "../types/types";
 
 const categoryData: Category[] = [
