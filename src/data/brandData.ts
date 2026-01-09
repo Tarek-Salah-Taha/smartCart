@@ -242,7 +242,7 @@ const brandData: Brand[] = [
     title: "Lenovo",
     description:
       "Lenovo provides a variety of consumer electronics and accessories, aiming to deliver quality at an affordable price.",
-    link: "/brands/leveno",
+    link: "/brands/lenovo",
     isFeatured: true,
   },
   {
