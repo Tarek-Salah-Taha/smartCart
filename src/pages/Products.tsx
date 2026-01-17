@@ -52,7 +52,7 @@ function Products() {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 mb-12">
         <AnimatePresence>
           {currentProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
@@ -83,11 +83,10 @@ function Products() {
                     <button
                       key={pageNumber}
                       onClick={() => goToPage(pageNumber)}
-                      className={`min-w-[36px] px-2 py-2 rounded-lg border transition-colors duration-200 font-medium text-sm ${
-                        currentPage === pageNumber
-                          ? "bg-[#d87d4a] text-white border-[#d87d4a]"
-                          : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                      }`}
+                      className={`min-w-[36px] px-2 py-2 rounded-lg border transition-colors duration-200 font-medium text-sm ${currentPage === pageNumber
+                        ? "bg-[#d87d4a] text-white border-[#d87d4a]"
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                        }`}
                     >
                       {pageNumber}
                     </button>
@@ -120,11 +119,10 @@ function Products() {
                       <button
                         key={pageNumber}
                         onClick={() => goToPage(pageNumber)}
-                        className={`min-w-[36px] px-2 py-2 rounded-lg border transition-colors duration-200 font-medium text-sm ${
-                          currentPage === pageNumber
-                            ? "bg-[#d87d4a] text-white border-[#d87d4a]"
-                            : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                        }`}
+                        className={`min-w-[36px] px-2 py-2 rounded-lg border transition-colors duration-200 font-medium text-sm ${currentPage === pageNumber
+                          ? "bg-[#d87d4a] text-white border-[#d87d4a]"
+                          : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                          }`}
                       >
                         {pageNumber}
                       </button>
@@ -166,11 +164,10 @@ function Products() {
                     <button
                       key={pageNumber}
                       onClick={() => goToPage(pageNumber)}
-                      className={`min-w-[44px] px-3 py-2 rounded-lg border transition-colors duration-200 font-medium ${
-                        currentPage === pageNumber
-                          ? "bg-[#d87d4a] text-white border-[#d87d4a]"
-                          : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                      }`}
+                      className={`min-w-[44px] px-3 py-2 rounded-lg border transition-colors duration-200 font-medium ${currentPage === pageNumber
+                        ? "bg-[#d87d4a] text-white border-[#d87d4a]"
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                        }`}
                     >
                       {pageNumber}
                     </button>

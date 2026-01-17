@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { FaHeart, FaMinus, FaPlus } from "react-icons/fa";
+import { FaHeart, FaMinus, FaPlus, FaEye } from "react-icons/fa";
 import { CiHeart } from "react-icons/ci";
 import formatPrice from "../helpers/formatCurrency";
-import { MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDelete, MdOutlineShoppingBag } from "react-icons/md";
 import ProductDetailModal from "./ProductDetailModal";
 import { useUser } from "../features/user/useUser";
 import { useFavorites } from "../features/favorites/useFavorites";
@@ -132,145 +132,127 @@ function ProductCard({ product }: ProductCardProps) {
   return (
     <>
       <motion.div
-        initial={{
-          opacity: 0,
-          scale: 0.95,
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-        }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        whileHover={{ scale: 1.02, boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}
-        transition={{ duration: 0.3 }}
-        className="relative w-full max-w-full sm:max-w-sm bg-white border border-gray-100 rounded-xl overflow-hidden flex flex-col group"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="group relative bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col h-full overflow-hidden border border-transparent hover:border-gray-100"
       >
-        {/* Favorite Icon */}
+        {/* Floating Actions (Favorite & Discount) */}
+        <div className="absolute top-3 left-3 z-30">
+          {product.discount > 0 && (
+            <div className="bg-[#d87d4a] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg mb-2">
+              -{product.discount}%
+            </div>
+          )}
+        </div>
+
         <motion.button
           onClick={handleToggleFavorite}
-          whileHover={{ scale: 1.2, color: "#dc2626" }} // red-600 hex
           whileTap={{ scale: 0.9 }}
-          className="absolute top-2 left-2 z-10 bg-white p-2 rounded-full shadow transition-colors duration-300"
+          initial={{ opacity: 0.8 }}
+          whileHover={{ opacity: 1, scale: 1.1 }}
+          className="absolute top-3 right-3 z-30 p-2.5 bg-white rounded-full shadow-md text-gray-400 hover:text-red-500 transition-colors"
         >
           {isFavorite ? (
-            <FaHeart className="text-red-600" />
+            <FaHeart className="text-red-500 text-lg" />
           ) : (
-            <CiHeart size={20} />
+            <CiHeart className="text-xl stroke-[0.5]" />
           )}
         </motion.button>
 
-        {/* Discount Badge */}
-        {product.discount > 0 && (
-          <motion.div
-            className="absolute top-3 right-3 bg-red-600 text-white text-sm font-bold px-3 py-1 rounded-xl shadow-lg z-10 cursor-default select-none"
-            whileHover={{ scale: 1.1 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            Save {product.discount}%
-          </motion.div>
-        )}
+        {/* Image Section */}
+        <div
+          className="relative bg-gray-50 h-[220px] sm:h-[260px] flex items-center justify-center p-6 overflow-hidden cursor-pointer"
+          onClick={() => setIsModalOpen(true)}
+        >
+          {/* Gradient Overlay on Hover */}
+          <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
 
-        {/* Image */}
-        <div className="bg-gray-50 p-2 sm:p-4 flex justify-center items-center h-40 sm:h-48 rounded-t-xl">
-          <img
+          <motion.img
             src={product.image}
             alt={product.title}
-            className="h-full object-contain transition-transform duration-300 group-hover:scale-105 mt-10 sm:mt-0"
-            loading="lazy"
+            className="w-full h-full object-contain mix-blend-multiply relative z-0"
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           />
+
+          {/* Quick View Button (Appears on Hover) */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none md:pointer-events-auto"
+          >
+            <div className="bg-white/90 backdrop-blur-sm text-gray-800 px-6 py-3 rounded-full font-bold text-sm shadow-xl flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+              <FaEye /> Quick View
+            </div>
+          </motion.div>
+
         </div>
 
-        {/* Content */}
-        <div className="flex flex-col justify-between gap-4 p-4 flex-grow">
-          {/* Title */}
-          <h3 className="text-sm sm:text-base font-semibold text-gray-800 line-clamp-3 leading-snug">
+        {/* Content Section */}
+        <div className="p-5 flex flex-col flex-grow">
+          {/* Brand/Category Tag (Optional - using category here) */}
+          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+            {product.category || "Audio"}
+          </div>
+
+          <h3
+            className="text-lg font-bold text-gray-900 mb-1 line-clamp-2 leading-tight cursor-pointer hover:text-[#d87d4a] transition-colors"
+            onClick={() => setIsModalOpen(true)}
+          >
             {product.title}
           </h3>
 
-          {/* Price */}
-          <div className="flex justify-between items-center">
-            <div className="space-x-2 text-sm">
+          <p className="text-sm text-gray-500 line-clamp-2 mb-3 min-h-[40px] leading-relaxed">
+            {product.description}
+          </p>
+
+          {/* Pricing */}
+          <div className="mt-auto pt-2 flex items-end justify-between border-t border-dashed border-gray-100">
+            <div className="flex flex-col">
               {product.discount > 0 && (
-                <span className="line-through text-gray-400 font-medium text-md">
+                <span className="text-sm text-gray-400 line-through mb-0.5">
                   {formatPrice(priceWithoutDiscount)}
                 </span>
               )}
-              <span className="text-[#d87d4a] font-bold text-lg sm:text-xl">
+              <span className="text-xl font-extrabold text-[#d87d4a]">
                 {formatPrice(product.price)}
               </span>
             </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 mt-2">
-            {/* Add to Cart or Quantity Controls first (desktop left, mobile below View Details visually) */}
-            {!items?.some((item) => item.itemId === product.id) ? (
-              <motion.button
-                onClick={handleAddToCart}
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 0 8px rgba(216,125,74,0.6)",
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="flex-1 text-base font-semibold text-white bg-[#d87d4a] hover:bg-[#c76b3a] px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg shadow transition duration-300 h-12 sm:h-auto sm:order-1 order-2 sm:text-base text-md"
-              >
-                Add to Cart
-              </motion.button>
-            ) : (
-              <div
-                className="flex flex-1 items-center justify-center gap-4 bg-white px-4 py-2 rounded-lg text-black text-base font-semibold shadow-md
-                 h-12 sm:h-auto
-                 sm:order-1 order-2"
-                style={{
-                  minWidth: "0",
-                  boxShadow: "0 2px 6px rgba(216,125,74,0.4)",
-                }}
-              >
+            {/* Actions */}
+            <div className="flex items-center gap-2">
+              {!items?.some((item) => item.itemId === product.id) ? (
                 <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.85 }}
-                  onClick={handleDecreaseQuantity}
-                  className="flex items-center justify-center p-1 rounded hover:bg-[#d87d4a] hover:text-white transition-colors"
+                  onClick={handleAddToCart}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gray-900 hover:bg-[#d87d4a] text-white p-3 rounded-xl shadow-lg transition-colors duration-300 flex items-center justify-center"
+                  aria-label="Add to cart"
                 >
-                  {quantity === 1 ? (
-                    <MdOutlineDelete size={22} />
-                  ) : (
-                    <FaMinus size={16} />
-                  )}
+                  <MdOutlineShoppingBag size={22} />
                 </motion.button>
+              ) : (
+                // Quantity Controls
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                  <motion.button
+                    onClick={handleDecreaseQuantity}
+                    whileTap={{ scale: 0.9 }}
+                    className="w-8 h-8 flex items-center justify-center bg-white rounded-md shadow-sm text-gray-600 hover:text-red-500 transition-colors"
+                  >
+                    {quantity === 1 ? <MdOutlineDelete size={16} /> : <FaMinus size={10} />}
+                  </motion.button>
 
-                <motion.span
-                  key={quantity}
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: [1, 1.3, 0.95, 1], opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="px-3 text-lg"
-                >
-                  {quantity}
-                </motion.span>
+                  <span className="w-8 text-center font-bold text-sm text-gray-800">{quantity}</span>
 
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.85 }}
-                  onClick={handleIncreaseQuantity}
-                  className="flex items-center justify-center p-1 rounded hover:bg-[#d87d4a] hover:text-white transition-colors"
-                >
-                  <FaPlus size={16} />
-                </motion.button>
-              </div>
-            )}
-
-            {/* View Details button second (desktop right, mobile on top) */}
-            <motion.button
-              onClick={() => setIsModalOpen(true)}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.96 }}
-              className="flex-1 text-base font-semibold text-gray-700 bg-transparent border border-gray-300 hover:bg-gray-100 px-4 py-2.5 rounded-lg transition duration-200 h-12 sm:h-auto sm:order-2 order-1 sm:text-base text-md"
-            >
-              View Details
-            </motion.button>
+                  <motion.button
+                    onClick={handleIncreaseQuantity}
+                    whileTap={{ scale: 0.9 }}
+                    className="w-8 h-8 flex items-center justify-center bg-white rounded-md shadow-sm text-gray-600 hover:text-green-600 transition-colors"
+                  >
+                    <FaPlus size={10} />
+                  </motion.button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </motion.div>

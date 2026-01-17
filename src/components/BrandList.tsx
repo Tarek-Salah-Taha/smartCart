@@ -19,7 +19,7 @@ function BrandList() {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 justify-items-center">
         <AnimatePresence>
           {currentBrand.map((category) => (
             <BrandInfoCard
@@ -53,11 +53,10 @@ function BrandList() {
                 <button
                   key={i + 1}
                   onClick={() => goToPage(i + 1)}
-                  className={`px-2 py-2 border rounded-md transition-colors duration-200 font-medium min-w-[36px] text-sm ${
-                    currentPage === i + 1
+                  className={`px-2 py-2 border rounded-md transition-colors duration-200 font-medium min-w-[36px] text-sm ${currentPage === i + 1
                       ? "bg-[#d87d4a] border-[#d87d4a] text-white"
                       : "border-gray-300 text-gray-700 hover:bg-[#f9f0eb]"
-                  }`}
+                    }`}
                 >
                   {i + 1}
                 </button>
@@ -96,11 +95,10 @@ function BrandList() {
                       <button
                         key={pageNum}
                         onClick={() => goToPage(pageNum)}
-                        className={`px-2 py-2 border rounded-md transition-colors duration-200 font-medium min-w-[36px] text-sm ${
-                          currentPage === pageNum
+                        className={`px-2 py-2 border rounded-md transition-colors duration-200 font-medium min-w-[36px] text-sm ${currentPage === pageNum
                             ? "bg-[#d87d4a] border-[#d87d4a] text-white"
                             : "border-gray-300 text-gray-700 hover:bg-[#f9f0eb]"
-                        }`}
+                          }`}
                       >
                         {pageNum}
                       </button>
@@ -134,11 +132,10 @@ function BrandList() {
               <button
                 key={i + 1}
                 onClick={() => goToPage(i + 1)}
-                className={`px-3 py-2 border rounded-md transition-colors duration-200 font-medium min-w-[44px] ${
-                  currentPage === i + 1
+                className={`px-3 py-2 border rounded-md transition-colors duration-200 font-medium min-w-[44px] ${currentPage === i + 1
                     ? "bg-[#d87d4a] border-[#d87d4a] text-white"
                     : "border-gray-300 text-gray-700 hover:bg-[#f9f0eb]"
-                }`}
+                  }`}
               >
                 {i + 1}
               </button>

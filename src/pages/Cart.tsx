@@ -1,4 +1,6 @@
 import { AiOutlineDelete } from "react-icons/ai";
+import { FaMinus, FaPlus } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 import formatPrice from "../helpers/formatCurrency";
 import { useUser } from "../features/user/useUser";
@@ -6,6 +8,7 @@ import { useCart } from "../features/cart/useCart";
 import { Item } from "../types/types";
 import Spinner from "../components/Spinner";
 import { useCartManager } from "../features/cart/useCartManager";
+import { MdOutlineShoppingBag } from "react-icons/md";
 
 function Cart() {
   const { guestCart, removeItem, updateQuantity, clearCart } = useCartManager();
@@ -59,96 +62,123 @@ function Cart() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-4">
-        Your Cart
+    <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+      <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-gray-900 border-b border-gray-100 pb-6 flex items-center gap-3">
+        Shopping Cart
+        <span className="text-lg font-medium text-gray-400 bg-gray-50 px-3 py-1 rounded-full">
+          {items?.length || 0} items
+        </span>
       </h1>
 
       {isLoading ? (
-        <div className="flex justify-center py-12">
+        <div className="flex justify-center py-20">
           <Spinner />
         </div>
       ) : !items || items?.length === 0 ? (
-        <div className="bg-gray-50 rounded-xl p-8 text-center">
-          <p className="text-xl text-gray-700 mb-2">Your cart is empty</p>
-          <p className="text-gray-500">
-            Start shopping and add items to your cart!
+        <div className="bg-white rounded-3xl p-12 text-center shadow-sm border border-gray-100 flex flex-col items-center">
+          <div className="bg-gray-50 p-6 rounded-full mb-6 text-[#d87d4a]">
+            <MdOutlineShoppingBag size={48} />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
+          <p className="text-gray-500 mb-8 max-w-sm mx-auto">
+            Looks like you haven't added anything to your cart yet.
           </p>
+          <motion.a
+            href="/allProducts" // Assuming you have a products link or use useNavigate
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-[#d87d4a] text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-[#c76b3a] transition-colors"
+          >
+            Start Shopping
+          </motion.a>
         </div>
       ) : (
         <div className="space-y-6">
-          {items?.map((item) => (
-            <div
-              key={item.itemId}
-              className="flex flex-col sm:flex-row items-center gap-6 p-5 bg-white rounded-lg shadow-sm border border-gray-100"
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-20 h-20 sm:w-24 sm:h-24 object-contain bg-white p-2 rounded-md border border-gray-200"
-                loading="lazy"
-              />
-
-              <div className="flex-1 text-center sm:text-left">
-                <h2 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2">
-                  {item.title}
-                </h2>
-                <p className="text-base font-medium text-gray-700">
-                  {formatPrice(item.price)}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() =>
-                    item.quantity > 1 && handleDecreaseQuantity(item)
-                  }
-                  disabled={item.quantity <= 1}
-                  className={`w-8 h-8 flex items-center justify-center rounded-full ${
-                    item.quantity <= 1
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-200 hover:bg-gray-300 text-gray-700"
-                  } transition-colors duration-200`}
-                  aria-label="Decrease quantity"
-                >
-                  −
-                </button>
-
-                <span className="w-10 text-center text-gray-700 font-medium text-lg">
-                  {item.quantity}
-                </span>
-
-                <button
-                  onClick={() => handleIncreaseQuantity(item)}
-                  className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 text-gray-700 transition-colors duration-200"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </div>
-
-              <button
-                onClick={() => handleRemoveItem(item)}
-                className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
-                aria-label="Remove item"
+          <AnimatePresence>
+            {items?.map((item) => (
+              <motion.div
+                key={item.itemId}
+                layout
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                className="flex flex-col sm:flex-row items-center gap-6 p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
               >
-                <AiOutlineDelete size={24} />
+                {/* Image */}
+                <div className="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-gray-50 rounded-xl p-4">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-contain mix-blend-multiply"
+                    loading="lazy"
+                  />
+                </div>
+
+                {/* Details */}
+                <div className="flex-1 text-center sm:text-left w-full">
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+                    {item.title}
+                  </h2>
+                  <p className="text-lg font-bold text-[#d87d4a]">
+                    {formatPrice(item.price)}
+                  </p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 w-full sm:w-auto">
+                  {/* Quantity Controls */}
+                  <div className="flex items-center gap-3 bg-gray-50 p-1.5 rounded-xl border border-gray-100">
+                    <button
+                      onClick={() => handleDecreaseQuantity(item)}
+                      className="w-8 h-8 flex items-center justify-center bg-white text-gray-600 rounded-lg shadow-sm hover:text-red-500 transition-colors"
+                    >
+                      {item.quantity === 1 ? <AiOutlineDelete size={16} /> : <FaMinus size={10} />}
+                    </button>
+                    <span className="w-8 text-center font-bold text-gray-800">{item.quantity}</span>
+                    <button
+                      onClick={() => handleIncreaseQuantity(item)}
+                      className="w-8 h-8 flex items-center justify-center bg-white text-gray-600 rounded-lg shadow-sm hover:text-green-600 transition-colors"
+                    >
+                      <FaPlus size={10} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Remove Button (Desktop right, Mobile top-right via absolute maybe? Using standard flow for now) */}
+                <button
+                  onClick={() => handleRemoveItem(item)}
+                  className="hidden sm:block p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
+                  title="Remove Item"
+                >
+                  <AiOutlineDelete size={20} />
+                </button>
+
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {/* Checkout Section */}
+          <div className="mt-12 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+              <button
+                onClick={handleClearCart}
+                className="text-sm font-medium text-gray-400 hover:text-red-500 underline transition-colors"
+              >
+                Clear Cart
               </button>
-            </div>
-          ))}
 
-          <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 mt-8 p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-            <button
-              onClick={handleClearCart}
-              className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-300 shadow-sm hover:shadow-md"
-            >
-              Remove All Items
-            </button>
-
-            <div className="w-full sm:w-auto text-center sm:text-right">
-              <div className="text-lg text-gray-600 mb-1">Total</div>
-              <div className="text-2xl font-bold text-gray-800">
-                {formatPrice(+(totalPrice ?? 0).toFixed(2))}
+              <div className="flex items-center gap-4 sm:gap-8">
+                <div className="text-right">
+                  <span className="block text-sm text-gray-500 font-medium">Total</span>
+                  <span className="block text-3xl font-bold text-gray-900">{formatPrice(+(totalPrice ?? 0).toFixed(2))}</span>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="bg-black text-white px-8 py-4 rounded-xl font-bold shadow-xl hover:bg-[#d87d4a] transition-colors text-lg"
+                >
+                  Checkout
+                </motion.button>
               </div>
             </div>
           </div>

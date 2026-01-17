@@ -1,5 +1,5 @@
 import { FaPlus, FaMinus, FaHeart } from "react-icons/fa";
-import { MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDelete, MdClose, MdOutlineShoppingBag } from "react-icons/md";
 
 import formatPrice from "../helpers/formatCurrency";
 import { useUser } from "../features/user/useUser";
@@ -8,7 +8,7 @@ import { useCart } from "../features/cart/useCart";
 import GuestWarningModal from "./GuestWarningModal";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { CiHeart } from "react-icons/ci";
 import { ProductDetailModalProps } from "../types/types";
 import { useEscapeKey } from "../Hooks/useEscapeKey";
@@ -134,150 +134,146 @@ function ProductDetailModal({ product, onClose }: ProductDetailModalProps) {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 backdrop-blur-md flex justify-center items-center p-4">
-        <div className="bg-white rounded-2xl shadow-lg w-full max-w-6xl max-h-[90vh] p-6 relative overflow-y-auto">
-          {/* Close Button */}
-          <button
+      <AnimatePresence>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute top-6 right-6 text-2xl font-bold text-gray-700 hover:text-black"
-          >
-            ×
-          </button>
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          />
 
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Image Left (smaller) */}
-            <div className="flex-shrink-0 w-full lg:w-2/5 flex justify-center items-center">
+          {/* Modal Content */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row max-h-[90vh] lg:max-h-[800px]"
+          >
+            {/* Close Button */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-20 p-2 bg-white/50 hover:bg-white rounded-full transition-colors backdrop-blur-md border border-gray-100 shadow-sm"
+            >
+              <MdClose size={24} className="text-gray-700" />
+            </button>
+
+            {/* Left Side - Image */}
+            <div className="w-full lg:w-1/2 bg-gray-50 flex items-center justify-center p-8 lg:p-12 relative overflow-hidden group">
+              {/* Decorative background blob */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-gray-200/50 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
               <img
                 src={product.image}
                 alt={product.title}
-                className="h-60 object-contain rounded-xl"
-                loading="lazy"
+                className="w-full h-full object-contain max-h-[300px] lg:max-h-[500px] relative z-10 mix-blend-multiply transition-transform duration-500 hover:scale-105"
               />
             </div>
 
-            {/* Details Right (wider) */}
-            <div className="flex-1 space-y-4 pl-5">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 pr-10">
-                {product.title}
-              </h2>
-              <p className="text-xl font-semibold text-green-600">
-                <span className="text-base font-semibold text-gray-800 space-x-1">
-                  {product.discount > 0 ? (
-                    <>
-                      <span className="text-2xl text-red-600 font-bold">
-                        {formatPrice(product.price)}
-                      </span>
-                      <span className="line-through text-md text-gray-500">
-                        {formatPrice(priceWithoutDiscount)}
-                      </span>
-                      <p className="mt-2">
-                        <span className="text-lg text-teal-500 font-bold">
-                          Saving: {formatPrice(savedQuantity)}
-                        </span>
-                      </p>
-                    </>
-                  ) : (
-                    <span className="text-green-600 font-bold">
+            {/* Right Side - Details */}
+            <div className="w-full lg:w-1/2 flex flex-col p-6 lg:p-10 overflow-y-auto">
+
+              <div className="flex-1">
+                {/* Header */}
+                <div className="mb-6">
+                  <span className="inline-block text-xs font-bold tracking-wider text-[#d87d4a] uppercase bg-orange-50 px-3 py-1 rounded-full mb-3">
+                    {product.brand}
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight mb-2">
+                    {product.title}
+                  </h2>
+                  <div className="text-sm font-medium text-gray-400 capitalize">
+                    {product.category} Series
+                  </div>
+                </div>
+
+                {/* Price & Savings */}
+                <div className="mb-8">
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-4xl font-bold text-[#d87d4a]">
                       {formatPrice(product.price)}
                     </span>
-                  )}
-                </span>
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col gap-4 mt-6 w-full max-w-xs">
-                {/* Add to Cart and Favorite - side by side */}
-                <div className="flex items-center gap-3">
-                  {quantity === 0 ? (
-                    <motion.button
-                      onClick={handleAddToCart}
-                      whileHover={{
-                        scale: 1.05,
-                        boxShadow: "0 0 8px rgba(216,125,74,0.6)",
-                      }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex-1 text-base font-semibold text-white bg-[#d87d4a] hover:bg-[#c76b3a] px-4 py-5 rounded-lg shadow transition duration-300"
-                    >
-                      Add to Cart
-                    </motion.button>
-                  ) : (
-                    <div className="flex-1 flex items-center justify-between bg-white py-5 px-4 rounded-full shadow-sm border border-[#d87d4a]">
-                      <button
-                        onClick={handleDecreaseQuantity}
-                        className="p-2 bg-[#d87d4a] text-white rounded-lg shadow hover:bg-[#c76b3a] transition duration-300"
-                      >
-                        {quantity === 1 ? (
-                          <MdOutlineDelete size={16} />
-                        ) : (
-                          <FaMinus size={16} />
-                        )}
-                      </button>
-                      <span className="text-2xl font-semibold px-4">
-                        {quantity}
+                    {product.discount > 0 && (
+                      <span className="text-xl text-gray-400 line-through decoration-gray-400/50">
+                        {formatPrice(priceWithoutDiscount)}
                       </span>
-                      <button
-                        onClick={handleIncreaseQuantity}
-                        className="p-2 bg-[#d87d4a] text-white rounded-lg shadow hover:bg-[#c76b3a] transition duration-300"
-                      >
-                        <FaPlus size={16} />
-                      </button>
+                    )}
+                  </div>
+                  {product.discount > 0 && (
+                    <div className="text-green-600 font-semibold text-sm mt-1 flex items-center gap-2">
+                      <span className="bg-green-100 px-2 py-0.5 rounded">Save {formatPrice(savedQuantity)}</span>
+                      <span>({product.discount}% OFF)</span>
                     </div>
                   )}
-
-                  {/* Favorite Button (beside Add to Cart) */}
-                  <motion.button
-                    onClick={handleToggleFavorite}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`w-14 h-14 flex items-center justify-center rounded-full border transition duration-200 ${
-                      isFavorite
-                        ? "bg-transparent text-red-600 border-red-300"
-                        : "bg-transparent text-red-500 border-red-300"
-                    }`}
-                  >
-                    {isFavorite ? <FaHeart size={30} /> : <CiHeart size={35} />}
-                  </motion.button>
                 </div>
-              </div>
 
-              {/* Product Specs & Description */}
-              <div className="w-full bg-white rounded-xl shadow-md p-6 space-y-6 text-sm text-gray-700 border border-gray-100">
-                {/* Specs */}
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2 border-gray-200">
-                    Product Details:
-                  </h3>
-                  <div className="grid grid-cols-2 gap-y-3 text-sm text-gray-600">
-                    <div className="font-medium text-gray-800">Brand:</div>
-                    <div className="capitalize">{product.brand}</div>
-
-                    <div className="font-medium text-gray-800">Model:</div>
-                    <div className="capitalize">{product.model}</div>
-
-                    <div className="font-medium text-gray-800">Color:</div>
-                    <div className="capitalize">{product.color}</div>
-
-                    <div className="font-medium text-gray-800">Category:</div>
-                    <div className="capitalize">{product.category}</div>
+                {/* Spec Blocks Grid */}
+                <div className="grid grid-cols-2 gap-3 mb-8">
+                  <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                    <div className="text-xs text-gray-400 font-bold uppercase mb-1">Model</div>
+                    <div className="text-gray-900 font-semibold">{product.model}</div>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                    <div className="text-xs text-gray-400 font-bold uppercase mb-1">Color</div>
+                    <div className="text-gray-900 font-semibold capitalize">{product.color}</div>
                   </div>
                 </div>
 
                 {/* Description */}
-                {product.description && (
-                  <div>
-                    <h3 className="text-base font-semibold text-gray-800 mb-2">
-                      Description
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed tracking-wide">
-                      {product.description}
-                    </p>
+                <div className="mb-8">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">Description</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {product.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Footer (Sticky bottom on mobile if needed, but here inline) */}
+              <div className="mt-auto pt-6 border-t border-gray-100 flex gap-4">
+                {/* Add to Cart / Qty */}
+                {quantity === 0 ? (
+                  <button
+                    onClick={handleAddToCart}
+                    className="flex-1 bg-gray-900 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-[#d87d4a] hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 text-lg"
+                  >
+                    <MdOutlineShoppingBag size={24} /> Add to Cart
+                  </button>
+                ) : (
+                  <div className="flex-1 flex items-center justify-between bg-gray-100 rounded-2xl p-2">
+                    <button
+                      onClick={handleDecreaseQuantity}
+                      className="w-12 h-12 bg-white text-gray-900 rounded-xl shadow-sm hover:text-red-600 flex items-center justify-center transition-colors"
+                    >
+                      {quantity === 1 ? <MdOutlineDelete size={20} /> : <FaMinus size={16} />}
+                    </button>
+                    <span className="text-xl font-bold text-gray-900">{quantity}</span>
+                    <button
+                      onClick={handleIncreaseQuantity}
+                      className="w-12 h-12 bg-white text-gray-900 rounded-xl shadow-sm hover:text-green-600 flex items-center justify-center transition-colors"
+                    >
+                      <FaPlus size={16} />
+                    </button>
                   </div>
                 )}
+
+                {/* Favorite */}
+                <button
+                  onClick={handleToggleFavorite}
+                  className={`w-[60px] flex items-center justify-center rounded-2xl border-2 transition-all duration-300 ${isFavorite
+                      ? "border-red-100 bg-red-50 text-red-500"
+                      : "border-gray-200 hover:border-[#d87d4a] hover:text-[#d87d4a] text-gray-400"
+                    }`}
+                >
+                  {isFavorite ? <FaHeart size={28} /> : <CiHeart size={32} strokeWidth={1} />}
+                </button>
               </div>
+
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </AnimatePresence>
 
       {showGuestPrompt && (
         <GuestWarningModal

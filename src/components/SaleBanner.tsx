@@ -17,7 +17,7 @@ function NextArrow({ onClick }: CustomArrowProps) {
   return (
     <button
       onClick={onClick}
-      className="absolute -right-2 md:-right-6 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 flex items-center justify-center bg-white shadow-lg hover:bg-[#d87d4a] text-gray-800 hover:text-white rounded-full border border-gray-100 transition-all duration-300 cursor-pointer flex"
+      className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 flex items-center justify-center bg-white/90 shadow-lg hover:bg-[#d87d4a] text-gray-800 hover:text-white rounded-full border border-gray-100 transition-all duration-300 cursor-pointer flex backdrop-blur-sm"
       aria-label="Next"
     >
       <FaChevronRight className="w-3 h-3 md:w-5 md:h-5" />
@@ -29,7 +29,7 @@ function PrevArrow({ onClick }: CustomArrowProps) {
   return (
     <button
       onClick={onClick}
-      className="absolute -left-2 md:-left-6 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 flex items-center justify-center bg-white shadow-lg hover:bg-[#d87d4a] text-gray-800 hover:text-white rounded-full border border-gray-100 transition-all duration-300 cursor-pointer flex"
+      className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 flex items-center justify-center bg-white/90 shadow-lg hover:bg-[#d87d4a] text-gray-800 hover:text-white rounded-full border border-gray-100 transition-all duration-300 cursor-pointer flex backdrop-blur-sm"
       aria-label="Previous"
     >
       <FaChevronLeft className="w-3 h-3 md:w-5 md:h-5" />
@@ -112,8 +112,8 @@ function SaleBanner() {
   };
 
   return (
-    <section className="bg-white py-6 md:py-12 lg:py-16 overflow-hidden mb-8 md:mb-12">
-      <div className="max-w-7xl mx-auto px-6 lg:pl-12 lg:pr-20 relative">
+    <section className="bg-white py-4 md:py-8 lg:py-10 overflow-hidden">
+      <div className="w-full relative">
         <Slider {...settings}>
           {slides.map((slide) => (
             <div key={slide.id} className="outline-none px-1">
