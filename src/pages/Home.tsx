@@ -2,6 +2,9 @@ import FeaturedBrands from "../components/FeaturedBrands";
 import ProductsOnSale from "../components/ProductsOnSale";
 import SaleBanner from "../components/SaleBanner";
 import PopularCategories from "../components/PopularCategories";
+import WhyChooseUs from "../components/WhyChooseUs";
+import Testimonials from "../components/Testimonials";
+import NewsletterSignup from "../components/NewsletterSignup";
 
 function Home() {
   return (
@@ -11,6 +14,9 @@ function Home() {
         <PopularCategories />
         <FeaturedBrands />
         <ProductsOnSale />
+        <WhyChooseUs />
+        <Testimonials />
+        <NewsletterSignup />
       </div>
     </div>
   );

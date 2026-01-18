@@ -17,7 +17,7 @@ function NextArrow({ onClick }: CustomArrowProps) {
   return (
     <button
       onClick={onClick}
-      className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 flex items-center justify-center bg-white/90 shadow-lg hover:bg-[#d87d4a] text-gray-800 hover:text-white rounded-full border border-gray-100 transition-all duration-300 cursor-pointer flex backdrop-blur-sm"
+      className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center bg-white/90 shadow-lg hover:bg-[#d87d4a] text-gray-800 hover:text-white rounded-full border border-gray-100 transition-all duration-300 cursor-pointer backdrop-blur-sm"
       aria-label="Next"
     >
       <FaChevronRight className="w-3 h-3 md:w-5 md:h-5" />
@@ -29,7 +29,7 @@ function PrevArrow({ onClick }: CustomArrowProps) {
   return (
     <button
       onClick={onClick}
-      className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 flex items-center justify-center bg-white/90 shadow-lg hover:bg-[#d87d4a] text-gray-800 hover:text-white rounded-full border border-gray-100 transition-all duration-300 cursor-pointer flex backdrop-blur-sm"
+      className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center bg-white/90 shadow-lg hover:bg-[#d87d4a] text-gray-800 hover:text-white rounded-full border border-gray-100 transition-all duration-300 cursor-pointer backdrop-blur-sm"
       aria-label="Previous"
     >
       <FaChevronLeft className="w-3 h-3 md:w-5 md:h-5" />
@@ -116,11 +116,11 @@ function SaleBanner() {
       <div className="w-full relative">
         <Slider {...settings}>
           {slides.map((slide) => (
-            <div key={slide.id} className="outline-none px-1">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-16 min-h-[auto] md:min-h-[550px]">
+            <div key={slide.id} className="outline-none">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-16 min-h-[auto] md:min-h-[550px] px-12 md:px-24">
 
                 {/* Text Content */}
-                <div className="w-full md:w-1/2 text-center md:text-left flex flex-col justify-center order-1 md:order-1 md:pl-8 lg:pl-16">
+                <div className="w-full md:w-1/2 text-center md:text-left flex flex-col justify-center order-1 md:order-1">
                   <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold mb-3 md:mb-6 text-gray-900 tracking-tight leading-[1.1]">
                     {slide.title.split("–")[0]}
                     <span className="block text-[#d87d4a] font-medium text-2xl md:text-4xl mt-2 md:mt-4">
