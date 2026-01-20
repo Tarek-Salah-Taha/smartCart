@@ -10,7 +10,10 @@ import Spinner from "../components/Spinner";
 import { useCartManager } from "../features/cart/useCartManager";
 import { MdOutlineShoppingBag } from "react-icons/md";
 
+import { useNavigate } from "react-router-dom";
+
 function Cart() {
+  const navigate = useNavigate();
   const { guestCart, removeItem, updateQuantity, clearCart } = useCartManager();
 
   const { user, isAuthenticated } = useUser();
@@ -175,6 +178,7 @@ function Cart() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate("/checkout")}
                   className="bg-black text-white px-8 py-4 rounded-xl font-bold shadow-xl hover:bg-[#d87d4a] transition-colors text-lg"
                 >
                   Checkout
