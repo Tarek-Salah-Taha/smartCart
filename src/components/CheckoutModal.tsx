@@ -1,13 +1,27 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { IoCheckmark, IoClose } from "react-icons/io5";
-
+import { Item } from "../types/types";
+import formatPrice from "../helpers/formatCurrency";
 
 interface CheckoutModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onGoHome: () => void;
+    orderId: string;
+    grandTotal: number;
+    shipping: number;
+    vat: number;
+    items: Item[];
 }
 
-const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
+const CheckoutModal = ({
+    isOpen,
+    onClose,
+    onGoHome,
+    orderId,
+    grandTotal,
+    items
+}: CheckoutModalProps) => {
     if (!isOpen) return null;
 
     return (
@@ -42,15 +56,46 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                         <h2 className="text-3xl font-bold uppercase text-gray-900 mb-4 leading-tight">
                             Thank you<br />for your order
                         </h2>
-                        <p className="text-gray-500">
+                        <p className="text-gray-500 mb-4">
                             You will receive an email confirmation shortly.
                         </p>
+                        {orderId && (
+                            <p className="text-sm font-bold text-gray-400 uppercase">
+                                Order ID: <span className="text-[#d87d4a]">{orderId}</span>
+                            </p>
+                        )}
                     </div>
 
-
+                    <div className="bg-gray-100 rounded-lg overflow-hidden mb-8 grid md:grid-cols-2">
+                        <div className="p-6">
+                            {items.length > 0 && (
+                                <div className="border-b border-gray-200/50 pb-3 mb-3">
+                                    <div className="flex items-center justify-between gap-4">
+                                        <div className="w-12 h-12 bg-gray-200 rounded-md p-1 flex-shrink-0">
+                                            <img src={items[0].image} alt={items[0].title} className="w-full h-full object-contain mix-blend-multiply" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-bold text-gray-900 text-sm truncate uppercase">{items[0].title}</p>
+                                            <p className="text-xs font-bold text-gray-500">{formatPrice(items[0].price)}</p>
+                                        </div>
+                                        <span className="text-sm font-bold text-gray-500">x{items[0].quantity}</span>
+                                    </div>
+                                </div>
+                            )}
+                            {items.length > 1 && (
+                                <p className="text-xs font-bold text-gray-500 text-center">
+                                    and {items.length - 1} other item(s)
+                                </p>
+                            )}
+                        </div>
+                        <div className="bg-black p-6 flex flex-col justify-center">
+                            <p className="text-sm font-medium text-white/50 uppercase mb-2">Grand Total</p>
+                            <p className="text-lg font-bold text-white">{formatPrice(grandTotal)}</p>
+                        </div>
+                    </div>
 
                     <button
-                        onClick={onClose}
+                        onClick={onGoHome}
                         className="w-full bg-[#d87d4a] text-white py-4 rounded-none uppercase font-bold text-sm tracking-widest hover:bg-[#c76b3a] transition-colors"
                     >
                         Back to Home

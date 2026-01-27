@@ -8,9 +8,10 @@ import { IoArrowBack } from "react-icons/io5";
 import formatPrice from "../helpers/formatCurrency";
 import { useUser } from "../features/user/useUser";
 import { useCart } from "../features/cart/useCart";
+import CheckoutModal from "../components/CheckoutModal";
+import { sendOrderConfirmation } from "../services/emailService";
 import { useCartManager } from "../features/cart/useCartManager";
 import Spinner from "../components/Spinner";
-import CheckoutModal from "../components/CheckoutModal";
 
 // Define form data types
 type CheckoutFormData = {
@@ -56,10 +57,31 @@ function Checkout() {
     const paymentMethod = watch("paymentMethod");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [orderId, setOrderId] = useState("");
 
-    const onSubmit = (data: CheckoutFormData) => {
+    const onSubmit = async (data: CheckoutFormData) => {
+        if (!items) return;
         console.log("Form Data:", data);
         console.log("Cart Items:", items);
+
+        const newOrderId = Math.random().toString(36).substr(2, 9).toUpperCase();
+        setOrderId(newOrderId);
+
+        // Send email confirmation
+        await sendOrderConfirmation({
+            orderId: newOrderId,
+            customerName: data.name,
+            customerEmail: data.email,
+            items: items.map(item => ({
+                title: item.title,
+                quantity: item.quantity,
+                price: item.price,
+                image: item.image
+            })),
+            total: grandTotal,
+            shipping: shippingCost,
+            tax: vat
+        });
 
         // TODO: Implement actual checkout logic (API call)
         // toast.success("Order placed successfully!"); // Moved to modal or kept as immediate feedback? maybe remove if modal shows
@@ -330,7 +352,13 @@ function Checkout() {
             </div>
             <CheckoutModal
                 isOpen={isModalOpen}
-                onClose={handleFinish}
+                onClose={() => setIsModalOpen(false)}
+                onGoHome={handleFinish}
+                orderId={orderId}
+                grandTotal={grandTotal}
+                shipping={shippingCost}
+                vat={vat}
+                items={items}
             />
         </div>
     );
