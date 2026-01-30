@@ -41,6 +41,30 @@ export type CartItem = Item & {
   userId: string | null;
 };
 
+export type OrderItem = {
+  title: string;
+  quantity: number;
+  price: number;
+  image: string;
+};
+
+export type Order = {
+  id: string;
+  created_at: string;
+  updated_at?: string;
+  total: number;
+  status: string;
+  items: OrderItem[];
+  shipping_address?: {
+    address: string;
+    city: string;
+    zip: string;
+    country: string;
+    phone: string;
+  };
+  payment_method?: string;
+};
+
 export type ErrorProps = {
   message: string;
 };
@@ -59,7 +83,14 @@ export type LoginParams = {
 
 type BaseUser = {
   firstName: string;
+  lastName?: string;
+  email?: string;
   avatarUrl?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  zip?: string;
+  country?: string;
 };
 
 export type SignUpParams = LoginParams &

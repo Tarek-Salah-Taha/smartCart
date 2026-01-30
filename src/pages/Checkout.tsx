@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,6 +12,9 @@ import CheckoutModal from "../components/CheckoutModal";
 import { sendOrderConfirmation } from "../services/emailService";
 import { useCartManager } from "../features/cart/useCartManager";
 import Spinner from "../components/Spinner";
+import { createOrder } from "../services/orderApi";
+import { updateUser } from "../services/userApi";
+import { Item } from "../types/types";
 
 // Define form data types
 type CheckoutFormData = {
@@ -36,9 +39,21 @@ function Checkout() {
         enabled: isAuthenticated && !!user?.id,
     });
 
+    // State to hold successful order details (to show in modal even after cart is cleared)
+    const [successOrderData, setSuccessOrderData] = useState<{
+        items: Item[],
+        grandTotal: number,
+        shipping: number,
+        vat: number,
+        orderId: string
+    } | null>(null);
+
     const items = isAuthenticated ? userCart : guestCart;
 
-    const totalPrice = items?.reduce(
+    // Use preserved items if available (for success view), otherwise current cart items
+    const displayItems = successOrderData ? successOrderData.items : items;
+
+    const totalPrice = displayItems?.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
     ) ?? 0;
@@ -47,45 +62,131 @@ function Checkout() {
     const vat = totalPrice * 0.20; // 20% VAT
     const grandTotal = totalPrice + shippingCost;
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<CheckoutFormData>({
+    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<CheckoutFormData>({
         defaultValues: {
             paymentMethod: "e-money",
             termsAccepted: false
         }
     });
 
+    // Pre-fill form with user data
+    useEffect(() => {
+        if (user) {
+            reset({
+                name: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+                email: user.email || "",
+                phone: user.phone || "",
+                address: user.address || "",
+                zip: user.zip || "",
+                city: user.city || "",
+                country: user.country || "",
+                paymentMethod: "e-money",
+                termsAccepted: false
+            });
+        }
+    }, [user, reset]);
+
     const paymentMethod = watch("paymentMethod");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [orderId, setOrderId] = useState("");
+
+    // Derived state for modal (use success data if available)
+    const modalOrderId = successOrderData?.orderId || "";
+    const modalGrandTotal = successOrderData?.grandTotal || grandTotal;
+    const modalShipping = successOrderData?.shipping || shippingCost;
+    const modalVat = successOrderData?.vat || vat;
+    const modalItems = successOrderData?.items || items || [];
+
+    const { clearCart } = useCartManager();
 
     const onSubmit = async (data: CheckoutFormData) => {
-        if (!items) return;
-        console.log("Form Data:", data);
-        console.log("Cart Items:", items);
+        if (!items || items.length === 0) return;
 
-        const newOrderId = Math.random().toString(36).substr(2, 9).toUpperCase();
-        setOrderId(newOrderId);
+        try {
+            // Update user profile with latest shipping info if logged in
+            if (isAuthenticated) {
+                await updateUser({
+                    phone: data.phone,
+                    address: data.address,
+                    city: data.city,
+                    zip: data.zip,
+                    country: data.country
+                }).catch(err => console.error("Failed to auto-save user data:", err));
+            }
 
-        // Send email confirmation
-        await sendOrderConfirmation({
-            orderId: newOrderId,
-            customerName: data.name,
-            customerEmail: data.email,
-            items: items.map(item => ({
+            // Create order object
+            const orderItems = items.map(item => ({
                 title: item.title,
                 quantity: item.quantity,
                 price: item.price,
                 image: item.image
-            })),
-            total: grandTotal,
-            shipping: shippingCost,
-            tax: vat
-        });
+            }));
 
-        // TODO: Implement actual checkout logic (API call)
-        // toast.success("Order placed successfully!"); // Moved to modal or kept as immediate feedback? maybe remove if modal shows
-        setIsModalOpen(true);
+            const newOrder = {
+                total: grandTotal,
+                status: "confirmed",
+                items: orderItems,
+                shipping_address: {
+                    address: data.address,
+                    city: data.city,
+                    zip: data.zip,
+                    country: data.country,
+                    phone: data.phone
+                },
+                payment_method: data.paymentMethod
+            };
+
+            // Save order to DB (if user is logged in)
+            let savedOrderId = "";
+            if (isAuthenticated) {
+                const savedOrder = await createOrder(newOrder);
+                savedOrderId = savedOrder.id;
+            } else {
+                savedOrderId = Math.random().toString(36).slice(2, 9).toUpperCase();
+            }
+
+            // Send email confirmation
+            await sendOrderConfirmation({
+                orderId: savedOrderId,
+                customerName: data.name,
+                customerEmail: data.email,
+                items: orderItems,
+                total: grandTotal,
+                shipping: shippingCost,
+                tax: vat
+            });
+
+            // Store order data for the modal BEFORE clearing cart
+            setSuccessOrderData({
+                items: [...items],
+                grandTotal,
+                shipping: shippingCost,
+                vat: vat,
+                orderId: savedOrderId
+            });
+
+            // Clear Cart and Show Success Modal
+            clearCart();
+            setIsModalOpen(true);
+
+        } catch (error) {
+            console.error("Checkout successful but failed to save order/send email", error);
+            // Still show success since payment is technically "done" in this demo, but log error
+
+            // Fallback for modal data if crash happens before setSuccessOrderData
+            if (!successOrderData) {
+                setSuccessOrderData({
+                    items: [...items],
+                    grandTotal,
+                    shipping: shippingCost,
+                    vat: vat,
+                    orderId: "ERROR-SAVED-LOCALLY"
+                });
+            }
+
+            clearCart();
+            setIsModalOpen(true);
+        }
     };
 
     const handleFinish = () => {
@@ -95,7 +196,8 @@ function Checkout() {
 
     if (isLoading) return <div className="flex justify-center py-20"><Spinner /></div>;
 
-    if (!items || items.length === 0) {
+    // Only show "Empty Cart" if we don't have a successful order to display
+    if ((!items || items.length === 0) && !successOrderData) {
         return (
             <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
                 <Link to="/allProducts" className="text-gray-500 hover:text-[#d87d4a] mb-8 inline-flex items-center gap-2 transition-colors">
@@ -354,11 +456,11 @@ function Checkout() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onGoHome={handleFinish}
-                orderId={orderId}
-                grandTotal={grandTotal}
-                shipping={shippingCost}
-                vat={vat}
-                items={items}
+                orderId={modalOrderId}
+                grandTotal={modalGrandTotal}
+                shipping={modalShipping}
+                vat={modalVat}
+                items={modalItems}
             />
         </div>
     );

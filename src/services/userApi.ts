@@ -77,7 +77,7 @@ export async function getCurrentUser() {
 
   const { data: userProfile, error: profileError } = await supabase
     .from("users")
-    .select("firstName, lastName, avatarUrl")
+    .select("firstName, lastName, avatarUrl, phone, address, city, zip, country")
     .eq("id", id)
     .single();
 
@@ -92,7 +92,29 @@ export async function getCurrentUser() {
     firstName: userProfile.firstName,
     lastName: userProfile.lastName,
     avatarUrl: userProfile.avatarUrl,
+    phone: userProfile.phone,
+    address: userProfile.address,
+    city: userProfile.city,
+    zip: userProfile.zip,
+    country: userProfile.country,
   };
+}
+
+export async function updateUser(userData: Partial<UserData>) {
+  const { data: sessionData } = await supabase.auth.getSession();
+  const userId = sessionData?.session?.user?.id;
+
+  if (!userId) throw new Error("User must be logged in to update profile");
+
+  const { error } = await supabase
+    .from("users")
+    .update(userData)
+    .eq("id", userId);
+
+  if (error) {
+    console.error("Error updating user:", error);
+    throw new Error("Could not update user profile");
+  }
 }
 
 export async function logout() {
@@ -133,8 +155,15 @@ export async function fetchUser(): Promise<UserData | null> {
 
   const userData: UserData = {
     id: data.user.id,
+    email: data.user.email,
     firstName: data.user.user_metadata?.firstName || "Guest",
+    lastName: data.user.user_metadata?.lastName || "",
     avatarUrl: data.user.user_metadata?.avatarUrl || "",
+    phone: data.user.user_metadata?.phone || "",
+    address: data.user.user_metadata?.address || "",
+    city: data.user.user_metadata?.city || "",
+    zip: data.user.user_metadata?.zip || "",
+    country: data.user.user_metadata?.country || "",
   };
 
   return userData;

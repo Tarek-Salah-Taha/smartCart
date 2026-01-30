@@ -22,12 +22,15 @@ const Brands = lazy(() => import("./pages/Brands"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Checkout = lazy(() => import("./pages/Checkout"));
+const Orders = lazy(() => import("./pages/Orders"));
+const OrderDetails = lazy(() => import("./pages/OrderDetails"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const Login = lazy(() => import("./pages/Login"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const AboutUs = lazy(() => import("./components/AboutUs"));
 const FAQs = lazy(() => import("./pages/FAQs"));
 const TermsAndPolicies = lazy(() => import("./pages/TermsAndPolicies"));
+const ContactSupport = lazy(() => import("./pages/ContactSupport"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,6 +59,8 @@ function App() {
             <Route path="brands/:brand" element={<BrandProducts />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/order/:id" element={<OrderDetails />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
@@ -63,6 +68,7 @@ function App() {
             <Route path="/aboutUs" element={<AboutUs />} />
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/termsAndPolicies" element={<TermsAndPolicies />} />
+            <Route path="/contactSupport" element={<ContactSupport />} />
           </Routes>
         </Suspense>
         <Footer />

@@ -58,6 +58,10 @@ const CheckoutModal = ({
                         </h2>
                         <p className="text-gray-500 mb-4">
                             You will receive an email confirmation shortly.
+                            <br />
+                            <span className="text-xs font-semibold text-[#d87d4a]">
+                                You can edit or cancel your order within 24 hours.
+                            </span>
                         </p>
                         {orderId && (
                             <p className="text-sm font-bold text-gray-400 uppercase">

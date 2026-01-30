@@ -82,6 +82,14 @@ export default function Footer() {
                 Terms & Policies
               </Link>
             </li>
+            <li>
+              <Link
+                to="/contactSupport"
+                className="text-zinc-300 hover:text-white transition-colors duration-300"
+              >
+                Contact Support
+              </Link>
+            </li>
           </ul>
         </div>
 
