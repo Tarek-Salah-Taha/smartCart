@@ -17,7 +17,7 @@ export default function GuestWarningModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-black bg-opacity-20 z-50 p-4"
+      className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-white/10 z-[60] p-4"
     >
       <motion.div
         className="relative bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center border border-gray-200"

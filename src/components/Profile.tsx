@@ -6,14 +6,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../features/cart/cartSlice";
 import { clearFavorites } from "../features/favorites/favoritesSlice";
+import toast from "react-hot-toast";
 
 import { useState } from "react";
 import OrdersModal from "./OrdersModal";
 import { useQuery } from "@tanstack/react-query";
 import { getOrders } from "../services/orderApi";
+import ConfirmationModal from "./ConfirmationModal";
 
 function Profile() {
   const [isOrdersOpen, setIsOrdersOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const { user, isAuthenticated, isLoading } = useUser();
@@ -35,17 +38,24 @@ function Profile() {
       dispatch(clearCart());
       dispatch(clearFavorites());
       queryClient.clear(); // Clear all cached data to prevent data leaking between users
+      toast.success("Successfully logged out!");
       navigate("/");
     },
     onError: (error) => {
       if (error instanceof Error) {
         console.error("Error logging out:", error.message);
+        toast.error("Failed to log out. Please try again.");
       } else {
         console.error("Unknown error occurred during logout");
       }
     },
   });
+
   const handleLogout = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const confirmLogout = () => {
     mutation.mutate();
   };
 
@@ -81,7 +91,20 @@ function Profile() {
             className="md:size-[32px] cursor-pointer text-gray-600 hover:text-red-500 transition-colors duration-200 transform hover:scale-110"
             onClick={handleLogout}
           />
-          <OrdersModal isOpen={isOrdersOpen} onClose={() => setIsOrdersOpen(false)} />
+          <OrdersModal
+            isOpen={isOrdersOpen}
+            onClose={() => setIsOrdersOpen(false)}
+          />
+          <ConfirmationModal
+            isOpen={isLogoutModalOpen}
+            onClose={() => setIsLogoutModalOpen(false)}
+            onConfirm={confirmLogout}
+            title="Confirm Logout"
+            message="Are you sure you want to log out of your account?"
+            confirmText="Logout"
+            cancelText="Stay Logged In"
+            isDestructive={true}
+          />
         </div>
       ) : (
         <div
@@ -93,9 +116,8 @@ function Profile() {
             className="md:size-[32px] text-gray-600 hover:text-[#d87d4a] transition-colors duration-200"
           />
         </div>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 }
 
