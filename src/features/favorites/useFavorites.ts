@@ -6,6 +6,7 @@ export function useFavorites(userId: string, options = {}) {
     queryKey: ["favorites", userId],
     queryFn: () => getFavorites(userId),
     enabled: !!userId,
+    staleTime: 1000 * 60, // 1 minute
     ...options,
   });
 

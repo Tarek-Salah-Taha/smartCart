@@ -6,6 +6,7 @@ export function useCart(userId: string, options = {}) {
     queryKey: ["cart", userId],
     queryFn: () => fetchUserCart(userId),
     enabled: !!userId,
+    staleTime: 1000 * 30, // 30 seconds
     ...options,
   });
 

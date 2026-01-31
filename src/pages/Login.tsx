@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/userApi";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { IoEyeOffSharp, IoEyeOutline } from "react-icons/io5";
+import { useUser } from "../features/user/useUser";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,21 +13,27 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
-
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useUser();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: login,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.clear(); // Ensure we start with a completely fresh state for the new user
       toast.success("Logged in successfully!");
+      navigate("/");
     },
   });
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     mutate({ email, password });
-    navigate("/");
   }
 
   return (

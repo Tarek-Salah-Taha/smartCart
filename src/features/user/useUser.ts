@@ -1,7 +1,5 @@
-import { useEffect } from "react";
-// import supabase from "../../services/supabase";
 import { UserData } from "../../types/types";
-import { fetchUser } from "../../services/userApi";
+import { getCurrentUser } from "../../services/userApi";
 import { useQuery } from "@tanstack/react-query";
 
 export function useUser() {
@@ -11,21 +9,9 @@ export function useUser() {
     isError,
   } = useQuery<UserData | null>({
     queryKey: ["user"],
-    queryFn: fetchUser,
-    initialData: () => {
-      const cached = localStorage.getItem("user");
-      return cached ? (JSON.parse(cached) as UserData) : null;
-    },
+    queryFn: getCurrentUser,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
-
-  // Handle localStorage updates when user data changes
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else if (user === null) {
-      localStorage.removeItem("user");
-    }
-  }, [user]);
 
   return {
     user,

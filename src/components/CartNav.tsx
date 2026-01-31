@@ -3,14 +3,13 @@ import { HiOutlineShoppingCart } from "react-icons/hi";
 import { useCart } from "../features/cart/useCart";
 import { useUser } from "../features/user/useUser";
 import { useSelector } from "react-redux";
-import MiniSpinner from "./MiniSpinner";
 import { RootState } from "../types/types";
 
 function CartNav() {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isLoading: userLoading } = useUser();
+  const { user, isAuthenticated } = useUser();
 
-  const { data: userCart, isLoading: cartLoading } = useCart(user?.id ?? "", {
+  const { data: userCart } = useCart(user?.id ?? "", {
     enabled: isAuthenticated && !!user?.id,
   });
 
@@ -20,14 +19,10 @@ function CartNav() {
 
   const totalQuantity = isAuthenticated
     ? userCart?.reduce(
-        (sum: number, item: { quantity: number }) => sum + item.quantity,
-        0
-      ) ?? 0
+      (sum: number, item: { quantity: number }) => sum + item.quantity,
+      0
+    ) ?? 0
     : guestTotalQuantity;
-
-  if (userLoading || cartLoading) {
-    return <MiniSpinner />;
-  }
 
   return (
     <div

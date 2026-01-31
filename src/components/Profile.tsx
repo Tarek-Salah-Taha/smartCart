@@ -1,6 +1,5 @@
 import { IoPersonCircleOutline, IoLogOutOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import MiniSpinner from "./MiniSpinner";
 import { useUser } from "../features/user/useUser";
 import { logout } from "../services/userApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -25,6 +24,7 @@ function Profile() {
     queryKey: ["orders"],
     queryFn: getOrders,
     enabled: isAuthenticated,
+    staleTime: 1000 * 60 * 2, // 2 minutes
   });
 
   const activeOrdersCount = orders?.length || 0;
@@ -34,8 +34,8 @@ function Profile() {
     onSuccess: () => {
       dispatch(clearCart());
       dispatch(clearFavorites());
+      queryClient.clear(); // Clear all cached data to prevent data leaking between users
       navigate("/");
-      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -49,11 +49,11 @@ function Profile() {
     mutation.mutate();
   };
 
-  if (isLoading) return <MiniSpinner />;
-
   return (
     <div className="relative">
-      {isAuthenticated && user ? (
+      {isLoading ? (
+        <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 animate-pulse" />
+      ) : isAuthenticated && user ? (
         <div className="flex items-center space-x-3 md:space-x-4">
           <div
             className="relative flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity"

@@ -57,46 +57,47 @@ export async function login({ email, password }: LoginParams) {
 
   if (error) {
     console.error("Login error:", error);
-    throw new Error("Email or password are incorrect");
+    throw new Error(error.message);
   }
 
   return await getCurrentUser(); // Fetch complete profile
 }
 
-export async function getCurrentUser() {
-  // 1. Get session
-  const { data: sessionData, error: sessionError } =
-    await supabase.auth.getSession();
+export async function getCurrentUser(): Promise<UserData | null> {
+  const { data: authData, error: authError } = await supabase.auth.getUser();
 
-  if (sessionError || !sessionData?.session) {
-    console.error("Session error:", sessionError);
-    return null; // Not logged in
-  }
+  if (authError || !authData?.user) return null;
 
-  const id = sessionData.session.user.id;
+  const user = authData.user;
 
-  const { data: userProfile, error: profileError } = await supabase
+  // Fetch from public.users table for extended data (phone, address, etc.)
+  const { data: profile, error: profileError } = await supabase
     .from("users")
-    .select("firstName, lastName, avatarUrl, phone, address, city, zip, country")
-    .eq("id", id)
+    .select("*")
+    .eq("id", user.id)
     .single();
 
   if (profileError) {
-    console.error("User profile error:", profileError);
-    throw new Error("Could not fetch user profile.");
+    console.warn("User profile record not found or inaccessible:", profileError.message);
+    // Return base data from auth metadata as fallback
+    return {
+      id: user.id,
+      email: user.email || "",
+      firstName: user.user_metadata?.firstName || "Guest",
+      lastName: user.user_metadata?.lastName || "",
+      avatarUrl: user.user_metadata?.avatarUrl || "",
+      phone: user.user_metadata?.phone || "",
+      address: user.user_metadata?.address || "",
+      city: user.user_metadata?.city || "",
+      zip: user.user_metadata?.zip || "",
+      country: user.user_metadata?.country || "",
+    };
   }
 
   return {
-    id,
-    email: sessionData.session.user.email || "",
-    firstName: userProfile.firstName,
-    lastName: userProfile.lastName,
-    avatarUrl: userProfile.avatarUrl,
-    phone: userProfile.phone,
-    address: userProfile.address,
-    city: userProfile.city,
-    zip: userProfile.zip,
-    country: userProfile.country,
+    id: user.id,
+    email: user.email || "",
+    ...profile,
   };
 }
 
@@ -146,25 +147,4 @@ export async function uploadAvatar(file: File): Promise<string> {
   const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
 
   return data.publicUrl;
-}
-
-export async function fetchUser(): Promise<UserData | null> {
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error || !data?.user) return null;
-
-  const userData: UserData = {
-    id: data.user.id,
-    email: data.user.email,
-    firstName: data.user.user_metadata?.firstName || "Guest",
-    lastName: data.user.user_metadata?.lastName || "",
-    avatarUrl: data.user.user_metadata?.avatarUrl || "",
-    phone: data.user.user_metadata?.phone || "",
-    address: data.user.user_metadata?.address || "",
-    city: data.user.user_metadata?.city || "",
-    zip: data.user.user_metadata?.zip || "",
-    country: data.user.user_metadata?.country || "",
-  };
-
-  return userData;
 }

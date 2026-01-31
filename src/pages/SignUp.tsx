@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { signUp, uploadAvatar } from "../services/userApi";
 import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { IoEyeOffSharp, IoEyeOutline } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { signUp, uploadAvatar } from "../services/userApi";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -32,6 +34,7 @@ export default function SignUp() {
 
       await signUp({ firstName, lastName, email, password, avatarUrl });
 
+      queryClient.clear(); // Ensure fresh state for the new user
       toast.success("Sign up successful!");
       navigate("/");
     } catch (err: unknown) {
@@ -179,9 +182,8 @@ export default function SignUp() {
               />
               <div className="w-full p-3 border border-gray-300 rounded-lg flex items-center justify-between cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
                 <span
-                  className={`truncate max-w-[70%] ${
-                    avatarFile ? "text-gray-800" : "text-gray-500"
-                  }`}
+                  className={`truncate max-w-[70%] ${avatarFile ? "text-gray-800" : "text-gray-500"
+                    }`}
                 >
                   {avatarFile ? avatarFile.name : "No file chosen"}
                 </span>

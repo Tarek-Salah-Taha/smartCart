@@ -4,13 +4,12 @@ import { MdOutlineFavoriteBorder } from "react-icons/md";
 
 import { useFavorites } from "../features/favorites/useFavorites";
 import { useUser } from "../features/user/useUser";
-import MiniSpinner from "./MiniSpinner";
 import { RootState } from "../types/types";
 
 function FavoriteNav() {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isLoading: userLoading } = useUser();
-  const { data: userFavorites, isLoading: favoriteLoading } = useFavorites(
+  const { user, isAuthenticated } = useUser();
+  const { data: userFavorites } = useFavorites(
     user?.id ?? "",
     {
       enabled: isAuthenticated && !!user?.id,
@@ -24,10 +23,6 @@ function FavoriteNav() {
   const totalQuantity = isAuthenticated
     ? userFavorites?.length ?? 0
     : guestTotalQuantity;
-
-  if (userLoading || favoriteLoading) {
-    return <MiniSpinner />;
-  }
 
   return (
     <div
