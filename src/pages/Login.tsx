@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { login } from "../services/userApi";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
@@ -74,12 +74,20 @@ export default function Login() {
           </motion.div>
 
           <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1 ml-1"
-            >
-              Password
-            </label>
+            <div className="flex justify-between items-center mb-1 ml-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <Link
+                to="/forgot-password"
+                className="text-xs font-medium text-[#d87d4a] hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
             <div className="relative">
               <input
                 id="password"

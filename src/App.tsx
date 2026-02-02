@@ -35,6 +35,8 @@ const AboutUs = lazy(() => import("./components/AboutUs"));
 const FAQs = lazy(() => import("./pages/FAQs"));
 const TermsAndPolicies = lazy(() => import("./pages/TermsAndPolicies"));
 const ContactSupport = lazy(() => import("./pages/ContactSupport"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const UpdatePassword = lazy(() => import("./pages/UpdatePassword"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -87,6 +89,8 @@ function App() {
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="*" element={<PageNotFound />} />
             <Route path="/aboutUs" element={<AboutUs />} />
             <Route path="/faqs" element={<FAQs />} />

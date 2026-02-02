@@ -146,5 +146,26 @@ export async function uploadAvatar(file: File): Promise<string> {
 
   const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
 
+
   return data.publicUrl;
+}
+
+export async function resetPassword(email: string) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/update-password`,
+  });
+
+  if (error) {
+    console.error("Reset password error:", error);
+    throw new Error(error.message);
+  }
+}
+
+export async function updatePassword(password: string) {
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    console.error("Update password error:", error);
+    throw new Error(error.message);
+  }
 }
