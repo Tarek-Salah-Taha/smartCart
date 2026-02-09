@@ -5,7 +5,7 @@ import { updatePassword } from "../services/userApi";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { IoEyeOffSharp, IoEyeOutline } from "react-icons/io5";
-import supabase from "../services/supabase";
+// import supabase from "../services/supabase";
 
 export default function UpdatePassword() {
     const [password, setPassword] = useState("");
@@ -13,27 +13,37 @@ export default function UpdatePassword() {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    // Check if user is authenticated (link usually signs them in)
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (!session) {
-                // If for some reason the magic link didn't log them in, or they just visited the page directly
-                // we might want to redirect them or they can't update.
-                // However, Supabase reset password flow technically should have logged them in.
-                // Or they might have a has fragment with access_token.
-                // Let's assume supabase client handles the hash and restores session.
-                // If no session after a brief delay, maybe redirect to login.
-            }
-        });
+        // Let Supabase read the hash, then clean the URL (UX only)
+        const timeout = setTimeout(() => {
+            window.history.replaceState({}, "", "/update-password");
+        }, 300);
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
-            if (event === "PASSWORD_RECOVERY") {
-                // ensure we are in a state to update
-            }
-        });
-
-        return () => subscription.unsubscribe();
+        return () => clearTimeout(timeout);
     }, []);
+
+
+    // Check if user is authenticated (link usually signs them in)
+    // useEffect(() => {
+    //     supabase.auth.getSession().then(({ data: { session } }) => {
+    //         if (!session) {
+    //             // If for some reason the magic link didn't log them in, or they just visited the page directly
+    //             // we might want to redirect them or they can't update.
+    //             // However, Supabase reset password flow technically should have logged them in.
+    //             // Or they might have a has fragment with access_token.
+    //             // Let's assume supabase client handles the hash and restores session.
+    //             // If no session after a brief delay, maybe redirect to login.
+    //         }
+    //     });
+
+    //     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
+    //         if (event === "PASSWORD_RECOVERY") {
+    //             // ensure we are in a state to update
+    //         }
+    //     });
+
+    //     return () => subscription.unsubscribe();
+    // }, []);
 
     const { mutate, isPending } = useMutation({
         mutationFn: updatePassword,
