@@ -236,7 +236,7 @@ function ProductDetailModal({ product, onClose }: ProductDetailModalProps) {
                 {quantity === 0 ? (
                   <button
                     onClick={handleAddToCart}
-                    className="flex-1 bg-gray-900 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-[#d87d4a] hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 text-lg"
+                    className="flex-1 bg-gray-900 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-[#d87d4a] hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 text-lg cursor-pointer"
                   >
                     <MdOutlineShoppingBag size={24} /> Add to Cart
                   </button>
@@ -262,8 +262,8 @@ function ProductDetailModal({ product, onClose }: ProductDetailModalProps) {
                 <button
                   onClick={handleToggleFavorite}
                   className={`w-[60px] flex items-center justify-center rounded-2xl border-2 transition-all duration-300 ${isFavorite
-                      ? "border-red-100 bg-red-50 text-red-500"
-                      : "border-gray-200 hover:border-[#d87d4a] hover:text-[#d87d4a] text-gray-400"
+                    ? "border-red-100 bg-red-50 text-red-500"
+                    : "border-gray-200 hover:border-[#d87d4a] hover:text-[#d87d4a] text-gray-400"
                     }`}
                 >
                   {isFavorite ? <FaHeart size={28} /> : <CiHeart size={32} strokeWidth={1} />}

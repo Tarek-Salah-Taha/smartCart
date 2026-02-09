@@ -175,7 +175,7 @@ function Favorites() {
                     {!quantity ? (
                       <motion.button
                         onClick={() => handleAddToCart(item)}
-                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-xl font-bold shadow-md hover:bg-[#d87d4a] transition-all"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-xl font-bold shadow-md hover:bg-[#d87d4a] transition-all cursor-pointer"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.95 }}
                       >
